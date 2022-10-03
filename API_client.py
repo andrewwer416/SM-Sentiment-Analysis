@@ -1,6 +1,4 @@
 import tweepy
-import webbrowser
-import time
 
 def download():
     api_key = "zbVpRP8CxXjTYbxw3hWmiATSO"
