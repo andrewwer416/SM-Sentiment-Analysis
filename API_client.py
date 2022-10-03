@@ -2,7 +2,7 @@ import tweepy
 import webbrowser
 import time
 
-def main():
+def download():
     api_key = "zbVpRP8CxXjTYbxw3hWmiATSO"
     api_secret = "D9loTi3q9eKvowZ1aVlwb6reaclGUBi61yw2kQpWjXA7yFK7r0"
     bearer_token = r"AAAAAAAAAAAAAAAAAAAAABrVhgEAAAAAGUbFhNGVS59BDN9XoWP95dICDes%3DuBdMY0YJrlsv3qNGKa41PlQbITyXGtfeBh0rgGCvFkkVk7KRsQ"
@@ -16,5 +16,3 @@ def main():
 
     response = client.search_recent_tweets(query=query, max_results=100)
     print(response)
-if __name__ == "__main__":
-    main()
