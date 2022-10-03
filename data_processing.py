@@ -19,3 +19,4 @@ def read():
 def preprocess(df_in):
     df_in['text_new'] = df_in['text'].apply(lambda post: " " .join(post.lower() for word in post.split()))
     print(df_in['text_new'].head())
+    #done
