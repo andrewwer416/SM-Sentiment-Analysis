@@ -25,9 +25,11 @@ def read():
 
 # process and simplify tweets
 def preprocess(df_in):
-    df_in['text_new'] = df_in['text'].str.lower()
-    df_in['text_new'] = df_in['text_new'].apply(lambda x: re.sub('@[^\s]+', '', x))
-    df_in['text_new'] = df_in['text_new'].apply(lambda x: re.sub('http[^\s]+', '', x))
-    df_in['text_new'] = df_in['text_new'].str.translate(str.maketrans('', '', string.punctuation))
-    print(df_in['text_new'].head())
+    df_in['target'] = (df_in['target'] / 2 - 1).astype('int')
+    df_in['text'] = df_in['text'].str.lower()
+    df_in['text'] = df_in['text'].apply(lambda x: re.sub('@[^\s]+', '', x))
+    df_in['text'] = df_in['text'].apply(lambda x: re.sub('http[^\s]+', '', x))
+    df_in['text'] = df_in['text'].str.translate(str.maketrans('', '', string.punctuation))
+
+    print(df_in.head())
     # done
