@@ -1,5 +1,4 @@
 import string
-import string
 import pandas as pd
 import re
 import numpy as np
@@ -13,7 +12,6 @@ from keras.models import Sequential
 data_path = f"C:/Users/andre/Documents/TwitterData/training.1600000.processed.noemoticon.csv"
 SPECIALS = []
 
-# author: jacob ziglav
 # extract target and text data for the training data
 def read():
     df = pd.read_csv(data_path, names=["target", "ids", "date", "flag", "user", "text"],
@@ -25,11 +23,15 @@ def read():
 
 # process and simplify tweets
 def preprocess(df_in):
-    df_in['target'] = (df_in['target'] / 2 - 1).astype('int')
-    df_in['text'] = df_in['text'].str.lower()
-    df_in['text'] = df_in['text'].apply(lambda x: re.sub('@[^\s]+', '', x))
-    df_in['text'] = df_in['text'].apply(lambda x: re.sub('http[^\s]+', '', x))
-    df_in['text'] = df_in['text'].str.translate(str.maketrans('', '', string.punctuation))
 
-    print(df_in.head())
-    # done
+    df_in['target'] = (df_in['target'] / 2 - 1).astype('int') # change to -1, 0, 1 scale
+    df_in['text'] = df_in['text'].str.lower() #lowercase
+    df_in['text'] = df_in['text'].apply(lambda x: re.sub('@[^\s]+', '', x)) #remove mentions
+    df_in['text'] = df_in['text'].apply(lambda x: re.sub('http[^\s]+', '', x)) #remove http links
+    df_in['text'] = df_in['text'].apply(lambda x: re.sub('www.[^\s]+', '', x)) #remove www links
+    df_in['text'] = df_in['text'].str.translate(str.maketrans('', '', string.punctuation)) #remove punctuation
+    #apply language translation
+    df_in['text'] = df_in['text'].apply(lemmatize)
+
+    print(df_in[0:10])
+
