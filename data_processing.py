@@ -3,12 +3,13 @@ import pandas as pd
 import re
 import numpy as np
 import os
+import nltk
 from sklearn import preprocessing
 import random
 import time
 import tensorflow as tf
 from keras.models import Sequential
-
+from nltk.corpus import wordnet
 data_path = f"C:/Users/andre/Documents/TwitterData/training.1600000.processed.noemoticon.csv"
 SPECIALS = []
 
@@ -22,6 +23,20 @@ def read():
     return df_test
 
 # process and simplify tweets
+lemm = nltk.stem.WordNetLemmatizer()    # done
+w_tokenizer = nltk.tokenize.WhitespaceTokenizer()
+def get_wordnet_pos(word):
+    """Map POS tag to first character lemmatize() accepts"""
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"J": wordnet.ADJ,
+                "N": wordnet.NOUN,
+                "V": wordnet.VERB,
+                "R": wordnet.ADV}
+
+    return tag_dict.get(tag, wordnet.NOUN)
+
+def lemmatize(text):
+    return [lemm.lemmatize(w, get_wordnet_pos(w)) for w in w_tokenizer.tokenize(text)]
 def preprocess(df_in):
 
     df_in['target'] = (df_in['target'] / 2 - 1).astype('int') # change to -1, 0, 1 scale
