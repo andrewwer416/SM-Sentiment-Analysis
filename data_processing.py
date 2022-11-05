@@ -42,6 +42,10 @@ def get_wordnet_pos(word):
     return tag_dict.get(tag, wordnet.NOUN)
 def lemmatize(text):
     return [lemm.lemmatize(w, get_wordnet_pos(w)) for w in w_tokenizer.tokenize(text)]
+
+def detokenize(text):
+    return TreebankWordDetokenizer().detokenize(text)
+
 # process and simplify tweets
 def preprocess(df_in):
     print(df_in[0:10])
