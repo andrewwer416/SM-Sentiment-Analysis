@@ -1,8 +1,10 @@
 #data handling/preprocessing packages
 import string
+import pickle
 import pandas as pd
 import re
 import nltk
+from autocorrect import Speller
 import tensorflow as tf
 import sklearn
 from sklearn.model_selection import train_test_split
@@ -32,7 +34,7 @@ stop_words = stopwords.words('english')
 #lemmatizing objects
 lemm = nltk.stem.WordNetLemmatizer()
 w_tokenizer = nltk.tokenize.WhitespaceTokenizer()
-
+spell = Speller()
 #used to determine type of word to lemmatize better
 def get_wordnet_pos(word):
     """Map POS tag to first character lemmatize() accepts"""
@@ -60,6 +62,7 @@ def text_preprocess(df_in):
     # apply language translation
     #df_in['text'] = df_in['text'].apply(lambda x: GoogleTranslator(source='auto', target='en').translate(text=x))
     df_in['text'] = df_in['text'].apply(lemmatize)
+    df_in['text'] = df_in['text'].apply(lambda x: [spell(w) for w in x])  # autocorrect
     df_in['text'] = df_in['text'].apply(lambda x: [w for w in x if w not in stop_words])
     df_in.to_csv('lemmatized_tweets.csv', index=False)
     df_in['tokens'] = df_in['text'].apply(lambda x: detokenize(x))
@@ -89,6 +92,8 @@ def preprocess(df_in):
     train_padded = pad_sequences(train_sequences, maxlen=max_length, truncating=trunc_type)
     test_sequences = tokenizer.texts_to_sequences(X_val)
     test_padded = pad_sequences(test_sequences, maxlen=max_length)
+    with open('tokenizer.pickle', 'wb') as handle:
+        pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
     return [train_padded, test_padded, y_train, y_val]
 
 def preprocess_lem(df_in):
